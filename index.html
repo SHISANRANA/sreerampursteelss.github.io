@@ -1,0 +1,162 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Login Website</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #141e30, #243b55);
+        }
+
+        .box {
+            background: white;
+            padding: 35px;
+            width: 350px;
+            max-width: 92%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px #0005;
+            text-align: center;
+        }
+
+        h1 {
+            color: #243b55;
+            font-size: 26px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #243b55;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #243b55;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #141e30;
+        }
+
+        #error {
+            color: crimson;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #welcome h1 {
+            color: #16834a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login Page -->
+    <div class="box" id="login">
+        <h1>Welcome Back!</h1>
+        <p>Enter any username and password</p>
+
+        <form id="loginForm">
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter username"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter password"
+                required
+            >
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p id="error"></p>
+    </div>
+
+    <!-- Welcome Page -->
+    <div class="box hidden" id="welcome">
+        <h1>WeLCoMe to KSI WOrLD! </h1>
+        <p id="welcomeText"></p>
+        <p>You have successfully 
+              been hacked hehahahahahahahahahahahahahahahahah
+     hmmmmmm something something.</p>
+        <button id="logoutBtn">Log Out</button>
+    </div>
+
+    <script>
+        const loginPage = document.getElementById("login");
+        const welcomePage = document.getElementById("welcome");
+
+        document.getElementById("loginForm").addEventListener(
+            "submit", function(event) {
+                event.preventDefault();
+
+                const username =
+                    document.getElementById("username").value.trim();
+
+                const password =
+                    document.getElementById("password").value;
+
+              if (username.length > 0 && password.length > 0) {
+                    loginPage.classList.add("hidden");
+                    welcomePage.classList.remove("hidden");
+
+                    document.getElementById("welcomeText").textContent =
+                        "Hello, " + username + "!";
+
+                    document.getElementById("error").textContent = "";
+                } else {
+                    document.getElementById("error").textContent =
+                        "Please enter both fields.";
+                }
+            }
+        );
+
+        document.getElementById("logoutBtn").addEventListener(
+            "click", function() {
+                welcomePage.classList.add("hidden");
+                loginPage.classList.remove("hidden");
+
+                document.getElementById("loginForm").reset();
+            }
+        );
+    </script>
+
+</body>
+</html>
+```
