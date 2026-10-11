@@ -3,157 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Login Website</title>
+    <title>Login</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
         body {
             margin: 0;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #141e30, #243b55);
+            font-family: Arial, sans-serif;
+            background: #243b55;
         }
 
         .box {
             background: white;
-            padding: 35px;
-            width: 350px;
-            max-width: 92%;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px #0005;
+            padding: 30px;
+            width: 320px;
+            border-radius: 10px;
             text-align: center;
-        }
-
-        h1 {
-            color: #243b55;
-            font-size: 26px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #243b55;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            margin-top: 12px;
-            border: none;
-            border-radius: 7px;
+            padding: 10px;
             background: #243b55;
             color: white;
-            font-size: 16px;
+            border: none;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #141e30;
-        }
+        #error { color: red; }
 
-        #error {
-            color: crimson;
-            font-size: 14px;
-        }
-
-        .hidden {
+        #hacked {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
         }
 
-        #welcome h1 {
-            color: #16834a;
+        #moving {
+            position: absolute;
+            color: lime;
+            font-size: 40px;
+            font-family: monospace;
+            white-space: nowrap;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Login Page -->
-    <div class="box" id="login">
-        <h1>Welcome Back!</h1>
-        <p>Enter any username and password</p>
-
-        <form id="loginForm">
-            <input
-                type="text"
-                id="username"
-                placeholder="Enter username"
-                required
-            >
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter password"
-                required
-            >
-
-            <button type="submit">Login</button>
-        </form>
-
+    <div class="box" id="loginBox">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username or email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
         <p id="error"></p>
     </div>
 
-    <!-- Welcome Page -->
-    <div class="box hidden" id="welcome">
-        <h1>WeLCoMe to KSI WOrLD! </h1>
-        <p id="welcomeText"></p>
-        <p>You have successfully 
-              been hacked hehahahahahahahahahahahahahahahahah
-     hmmmmmm something something.</p>
-        <button id="logoutBtn">Log Out</button>
+    <div id="hacked">
+        <div id="moving">YOU ARE HACKED</div>
     </div>
 
     <script>
-        const loginPage = document.getElementById("login");
-        const welcomePage = document.getElementById("welcome");
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
 
-        document.getElementById("loginForm").addEventListener(
-            "submit", function(event) {
-                event.preventDefault();
+            if (username == "" || password == "") {
+                document.getElementById("error").innerText = "Please fill both boxes.";
+                return;
+            }
 
-                const username =
-                    document.getElementById("username").value.trim();
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("hacked").style.display = "block";
 
-                const password =
-                    document.getElementById("password").value;
+            moveText();
+        }
 
-              if (username.length > 0 && password.length > 0) {
-                    loginPage.classList.add("hidden");
-                    welcomePage.classList.remove("hidden");
+        function moveText() {
+            var text = document.getElementById("moving");
+            var x = 50;
+            var y = 50;
+            var speedX = 3;
+            var speedY = 3;
 
-                    document.getElementById("welcomeText").textContent =
-                        "Hello, " + username + "!";
+            setInterval(function () {
+                x = x + speedX;
+                y = y + speedY;
 
-                    document.getElementById("error").textContent = "";
-                } else {
-                    document.getElementById("error").textContent =
-                        "Please enter both fields.";
+                if (x + text.offsetWidth > window.innerWidth || x < 0) {
+                    speedX = -speedX;
                 }
-            }
-        );
 
-        document.getElementById("logoutBtn").addEventListener(
-            "click", function() {
-                welcomePage.classList.add("hidden");
-                loginPage.classList.remove("hidden");
+                if (y + text.offsetHeight > window.innerHeight || y < 0) {
+                    speedY = -speedY;
+                }
 
-                document.getElementById("loginForm").reset();
-            }
-        );
+                text.style.left = x + "px";
+                text.style.top = y + "px";
+            }, 20);
+        }
     </script>
 
 </body>
