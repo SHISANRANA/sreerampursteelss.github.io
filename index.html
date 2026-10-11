@@ -20,6 +20,7 @@
             background: white;
             padding: 30px;
             width: 320px;
+            max-width: 90%;
             border-radius: 10px;
             text-align: center;
         }
@@ -42,6 +43,7 @@
 
         #error { color: red; }
 
+        /* Black hacked screen (hidden at the start) */
         #hacked {
             display: none;
             position: fixed;
@@ -52,12 +54,24 @@
             background: black;
         }
 
+        /* The text that moves around the screen */
         #moving {
             position: absolute;
             color: lime;
             font-size: 40px;
             font-family: monospace;
             white-space: nowrap;
+            text-shadow: 0 0 10px red;
+            animation: shake 0.1s infinite;   /* makes it vibrate */
+        }
+
+        /* Shaking effect: jumps a few pixels in different directions */
+        @keyframes shake {
+            0%   { transform: translate(2px, 2px); }
+            25%  { transform: translate(-3px, 1px); }
+            50%  { transform: translate(1px, -3px); }
+            75%  { transform: translate(-2px, -2px); }
+            100% { transform: translate(3px, 2px); }
         }
     </style>
 </head>
@@ -73,7 +87,7 @@
     </div>
 
     <div id="hacked">
-        <div id="moving">YOU ARE HACKED BRUH </div>
+        <div id="moving">YOU ARE HACKED</div>
     </div>
 
     <script>
@@ -90,8 +104,10 @@
             document.getElementById("hacked").style.display = "block";
 
             moveText();
+            vibratePhone();
         }
 
+        // Makes the text move around the screen
         function moveText() {
             var text = document.getElementById("moving");
             var x = 50;
@@ -114,6 +130,16 @@
                 text.style.left = x + "px";
                 text.style.top = y + "px";
             }, 20);
+        }
+
+        // Makes the phone vibrate (works on most Android phones)
+        function vibratePhone() {
+            if (navigator.vibrate) {
+                navigator.vibrate([300, 100, 300, 100, 300]);
+                setInterval(function () {
+                    navigator.vibrate([300, 100, 300]);
+                }, 1500);
+            }
         }
     </script>
 
