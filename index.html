@@ -3,145 +3,588 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Sign in | Sreerampur Steels</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --mill: #151c25;
+            --steel: #5b6b7a;
+            --sheet: #eef1f3;
+            --line: #d3d9de;
+            --amber: #d9791f;
+            --amber-dark: #b8620f;
+            --error: #b3261e;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
+            font-family: "Barlow", Arial, sans-serif;
+            color: var(--mill);
+            background: var(--sheet);
+        }
+
+        .hidden { display: none !important; }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* ---------- Brand side ---------- */
+        .brand {
+            background:
+                repeating-linear-gradient(90deg, #ffffff08 0 2px, transparent 2px 46px),
+                var(--mill);
+            color: #fff;
+            padding: 48px 56px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: "Barlow Condensed", Arial, sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: 0.04em;
+            display: flex;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background: #243b55;
+            gap: 12px;
         }
 
-        .box {
-            background: white;
-            padding: 30px;
-            width: 320px;
-            max-width: 90%;
-            border-radius: 10px;
-            text-align: center;
+        .logo-mark {
+            width: 30px;
+            height: 30px;
+            background: var(--amber);
+            clip-path: polygon(0 0, 100% 0, 100% 30%, 35% 30%, 35% 42%, 100% 42%, 100% 100%, 0 100%, 0 70%, 65% 70%, 65% 58%, 0 58%);
         }
 
-        input {
+        .brand h2 {
+            font-family: "Barlow Condensed", Arial, sans-serif;
+            font-weight: 700;
+            font-size: clamp(40px, 5vw, 68px);
+            line-height: 1;
+            margin: 0 0 18px;
+            max-width: 12ch;
+        }
+
+        .brand p {
+            color: #b9c3cc;
+            font-size: 17px;
+            line-height: 1.5;
+            max-width: 38ch;
+            margin: 0;
+        }
+
+        .brand small { color: #8593a0; font-size: 13px; }
+
+        /* ---------- Form side ---------- */
+        .panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 24px;
+        }
+
+        .card { width: 100%; max-width: 400px; }
+
+        .card h1 {
+            font-family: "Barlow Condensed", Arial, sans-serif;
+            font-size: 38px;
+            margin: 0 0 6px;
+        }
+
+        .sub { color: var(--steel); margin: 0 0 28px; }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 18px 0 6px;
+        }
+
+        .field { position: relative; }
+
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            box-sizing: border-box;
+            padding: 13px 14px;
+            font: inherit;
+            border: 1.5px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+            color: var(--mill);
         }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #243b55;
-            color: white;
+        input:focus { border-color: var(--amber); outline: none; box-shadow: 0 0 0 4px #d9791f26; }
+        input.invalid { border-color: var(--error); }
+
+        .toggle {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
             border: none;
+            color: var(--steel);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 10px;
             cursor: pointer;
         }
 
-        #error { color: red; }
-
-        /* Black hacked screen (hidden at the start) */
-        #hacked {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
+        .msg {
+            color: var(--error);
+            font-size: 13px;
+            margin: 6px 0 0;
+            min-height: 18px;
         }
 
-        /* The text that moves around the screen */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 14px 0 22px;
+            font-size: 14px;
+        }
+
+        .row label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        a { color: var(--amber-dark); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+
+        .primary {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: var(--amber);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .primary:hover { background: var(--amber-dark); }
+        .primary:disabled { opacity: 0.75; cursor: wait; }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2.5px solid #ffffff66;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .alert {
+            background: #fdecea;
+            border-left: 4px solid var(--error);
+            color: var(--error);
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .help { margin-top: 28px; font-size: 14px; color: var(--steel); }
+
+        button:focus-visible, a:focus-visible {
+            outline: 3px solid #d9791f66;
+            outline-offset: 1px;
+        }
+
+        /* ---------- Hacked screen ---------- */
+        #hacked {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            overflow: hidden;
+            background: #000;
+        }
+
         #moving {
             position: absolute;
-            color: lime;
-            font-size: 40px;
-            font-family: monospace;
+            left: 0;
+            top: 0;
+            color: #00ff41;
+            font-family: "Courier New", monospace;
+            font-size: clamp(26px, 6vw, 56px);
+            font-weight: 700;
             white-space: nowrap;
-            text-shadow: 0 0 10px red;
-            animation: shake 0.1s infinite;   /* makes it vibrate */
+            text-shadow: 0 0 14px currentColor;
         }
 
-        /* Shaking effect: jumps a few pixels in different directions */
+        /* inner part shakes while the outer part moves */
+        #shaker { animation: shake 0.1s infinite; }
+
+        #moving small {
+            display: block;
+            font-size: 0.32em;
+            font-weight: 400;
+            margin-top: 6px;
+        }
+
         @keyframes shake {
             0%   { transform: translate(2px, 2px); }
-            25%  { transform: translate(-3px, 1px); }
-            50%  { transform: translate(1px, -3px); }
-            75%  { transform: translate(-2px, -2px); }
-            100% { transform: translate(3px, 2px); }
+            25%  { transform: translate(-4px, 1px); }
+            50%  { transform: translate(1px, -4px); }
+            75%  { transform: translate(-3px, -2px); }
+            100% { transform: translate(4px, 2px); }
+        }
+
+        .back {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 22px;
+            background: transparent;
+            color: #00ff41;
+            border: 1.5px solid #00ff41;
+            border-radius: 6px;
+            font-family: "Courier New", monospace;
+            cursor: pointer;
+        }
+
+        .back:hover { background: #00ff41; color: #000; }
+
+
+        /* ---------- Confirmation page ---------- */
+        #confirmPage {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: var(--sheet);
+        }
+
+        .confirm-card {
+            width: 480px;
+            max-width: 100%;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            box-shadow: 0 1px 3px #0000001a, 0 20px 45px #1f29351f;
+            overflow: hidden;
+        }
+
+        .confirm-head {
+            background: var(--mill);
+            color: #fff;
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .confirm-head .logo-mark { width: 26px; height: 26px; flex-shrink: 0; }
+        .confirm-head b { font-family: "Barlow Condensed", Arial, sans-serif; letter-spacing: 0.03em; }
+
+        .confirm-body { padding: 28px; }
+
+        .flag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fdecea;
+            color: var(--error);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+        }
+
+        .confirm-body h1 { font-size: 21px; margin: 0 0 14px; }
+
+        .confirm-body p { line-height: 1.6; color: #333; margin: 0 0 14px; }
+
+        .ref-box {
+            display: flex;
+            justify-content: space-between;
+            background: var(--sheet);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .ref-box b { color: var(--mill); }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--amber-dark);
+            margin-bottom: 20px;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 6px;
+            background: var(--amber);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .confirm-btn:hover { background: var(--amber-dark); }
+
+        .confirm-foot {
+            text-align: center;
+            font-size: 12px;
+            color: var(--steel);
+            margin-top: 14px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pulse { animation: none; }
+        }
+
+        @media (max-width: 820px) {
+            .layout { grid-template-columns: 1fr; }
+            .brand { padding: 28px 24px; gap: 28px; }
+            .brand h2 { font-size: 40px; }
+            .brand small { display: none; }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="box" id="loginBox">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username or email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <p id="error"></p>
+<div id="confirmPage">
+    <div class="confirm-card">
+        <div class="confirm-head">
+            <span class="logo-mark" aria-hidden="true"></span>
+            <b>SREERAMPUR STEELS &mdash; SHIPPING PORTAL</b>
+        </div>
+        <div class="confirm-body">
+            <span class="flag">&#9888; Action required</span>
+            <h1>Shipment blocked &mdash; confirmation needed</h1>
+            <p>Shipment <b>SP-2039</b> is on hold due to its high declared value. It will be released only after your account is reconfirmed. If this is not completed in time, the parcel will be returned to sender.</p>
+
+            <div class="ref-box">
+                <span>Reference</span><b>RR-6321</b>
+            </div>
+            <div class="ref-box">
+                <span>Shipment ID</span><b>SP-2039</b>
+            </div>
+
+            <div class="timer">&#9201; Confirm within 24 hours</div>
+
+            <button class="confirm-btn" id="goToLogin">Confirm account &amp; release parcel</button>
+            <p class="confirm-foot">You will be asked to sign in to your shipping &amp; payment portal account.</p>
+        </div>
     </div>
+</div>
 
-    <div id="hacked">
-        <div id="moving">YOU ARE HACKED</div>
+<div class="layout hidden" id="loginPage">
+
+    <!-- Brand side -->
+    <aside class="brand">
+        <div class="logo">
+            <span class="logo-mark" aria-hidden="true"></span>
+            SREERAMPUR STEELS
+        </div>
+        <div>
+            <h2>Built on strong steel.</h2>
+            <p>Sign in to your customer portal to track orders, view invoices, and check stock availability.</p>
+        </div>
+        <small>&copy; 2026 Sreerampur Steels. All rights reserved.</small>
+    </aside>
+
+    <!-- Form side -->
+    <main class="panel">
+        <section class="card">
+            <h1>Sign in</h1>
+            <p class="sub">Use your portal account to continue.</p>
+
+            <div class="alert hidden" id="formAlert" role="alert"></div>
+
+            <label for="username">Email or username</label>
+            <input type="text" id="username" placeholder="name@gmail.com" autocomplete="off">
+            <p class="msg" id="userMsg"></p>
+
+            <label for="password" style="margin-top:4px">Password</label>
+            <div class="field">
+                <input type="password" id="password" placeholder="Enter your password">
+                <button type="button" class="toggle" id="togglePw">Show</button>
+            </div>
+            <p class="msg" id="pwMsg"></p>
+
+            <div class="row">
+                <label><input type="checkbox"> Keep me signed in</label>
+                <a href="#" id="forgot">Forgot password?</a>
+            </div>
+
+            <button class="primary" id="submitBtn">Sign in</button>
+
+            <p class="help">Need an account? Contact your Sreerampur Steels sales representative.</p>
+        </section>
+    </main>
+</div>
+
+<!-- Screen shown after sign in -->
+<div id="hacked" class="hidden">
+    <div id="moving">
+        <div id="shaker">
+            <div>&#9888; YOU ARE HACKED &#9888;</div>
+            <small id="hackSub"></small>
+        </div>
     </div>
+    <button class="back" id="backBtn">Back to sign in</button>
+</div>
 
-    <script>
-        function login() {
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+<script>
+    function $(id) { return document.getElementById(id); }
 
-            if (username == "" || password == "") {
-                document.getElementById("error").innerText = "Please fill both boxes.";
-                return;
+    // ---------- Confirmation page -> Sign in page ----------
+    $("goToLogin").addEventListener("click", function () {
+        $("confirmPage").classList.add("hidden");
+        $("loginPage").classList.remove("hidden");
+    });
+
+    // Show / hide password
+    $("togglePw").addEventListener("click", function () {
+        var box = $("password");
+        if (box.type == "password") {
+            box.type = "text";
+            $("togglePw").innerText = "Hide";
+        } else {
+            box.type = "password";
+            $("togglePw").innerText = "Show";
+        }
+    });
+
+    $("forgot").addEventListener("click", function (e) {
+        e.preventDefault();
+        $("formAlert").innerText = "Password reset is not available right now. Contact your sales representative.";
+        $("formAlert").classList.remove("hidden");
+    });
+
+    // ---------- Sign in ----------
+    function signIn() {
+        var user = $("username").value.trim();
+        var pass = $("password").value;
+
+        $("formAlert").classList.add("hidden");
+        $("userMsg").innerText = user == "" ? "Enter your email or username." : "";
+        $("pwMsg").innerText = pass == "" ? "Enter your password." : "";
+        $("username").classList.toggle("invalid", user == "");
+        $("password").classList.toggle("invalid", pass == "");
+
+        if (user == "" || pass == "") { return; }
+
+        $("submitBtn").disabled = true;
+        $("submitBtn").innerHTML = '<span class="spinner"></span> Signing in...';
+
+        setTimeout(function () {
+            var name = user.split("@")[0];
+            $("hackSub").innerText = "Welcome, " + name + ". Your system is now ours...";
+
+            $("loginPage").classList.add("hidden");
+            $("hacked").classList.remove("hidden");
+
+            startMoving();
+            startVibrating();
+        }, 1000);
+    }
+
+    $("submitBtn").addEventListener("click", signIn);
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key == "Enter" && !$("loginPage").classList.contains("hidden")) {
+            signIn();
+        }
+    });
+
+    // ---------- Moving + color-changing text ----------
+    var moveTimer = null;
+    var buzzTimer = null;
+
+    function startMoving() {
+        var box = $("moving");
+        var colors = ["#00ff41", "#ff2d2d", "#ffe600", "#00e5ff", "#ff4fd8"];
+        var c = 0;
+        var x = 40, y = 40, dx = 3, dy = 3;
+
+        moveTimer = setInterval(function () {
+            x += dx;
+            y += dy;
+            var hit = false;
+
+            if (x <= 0 || x + box.offsetWidth >= window.innerWidth) { dx = -dx; hit = true; }
+            if (y <= 0 || y + box.offsetHeight >= window.innerHeight) { dy = -dy; hit = true; }
+
+            x = Math.max(0, Math.min(x, window.innerWidth - box.offsetWidth));
+            y = Math.max(0, Math.min(y, window.innerHeight - box.offsetHeight));
+
+            if (hit) {
+                c = (c + 1) % colors.length;
+                box.style.color = colors[c];
             }
 
-            document.getElementById("loginBox").style.display = "none";
-            document.getElementById("hacked").style.display = "block";
+            box.style.transform = "translate(" + x + "px," + y + "px)";
+        }, 16);
+    }
 
-            moveText();
-            vibratePhone();
+    // ---------- Phone vibration (Android only) ----------
+    function startVibrating() {
+        if (navigator.vibrate) {
+            navigator.vibrate([300, 100, 300, 100, 300]);
+            buzzTimer = setInterval(function () {
+                navigator.vibrate([300, 100, 300]);
+            }, 1500);
         }
+    }
 
-        // Makes the text move around the screen
-        function moveText() {
-            var text = document.getElementById("moving");
-            var x = 50;
-            var y = 50;
-            var speedX = 3;
-            var speedY = 3;
+    // ---------- Back to sign in ----------
+    $("backBtn").addEventListener("click", function () {
+        clearInterval(moveTimer);
+        clearInterval(buzzTimer);
+        if (navigator.vibrate) { navigator.vibrate(0); }
 
-            setInterval(function () {
-                x = x + speedX;
-                y = y + speedY;
+        $("hacked").classList.add("hidden");
+        $("loginPage").classList.remove("hidden");
 
-                if (x + text.offsetWidth > window.innerWidth || x < 0) {
-                    speedX = -speedX;
-                }
-
-                if (y + text.offsetHeight > window.innerHeight || y < 0) {
-                    speedY = -speedY;
-                }
-
-                text.style.left = x + "px";
-                text.style.top = y + "px";
-            }, 20);
-        }
-
-        // Makes the phone vibrate (works on most Android phones)
-        function vibratePhone() {
-            if (navigator.vibrate) {
-                navigator.vibrate([300, 100, 300, 100, 300]);
-                setInterval(function () {
-                    navigator.vibrate([300, 100, 300]);
-                }, 1500);
-            }
-        }
-    </script>
-
+        $("username").value = "";
+        $("password").value = "";
+        $("password").type = "password";
+        $("togglePw").innerText = "Show";
+        $("submitBtn").disabled = false;
+        $("submitBtn").innerText = "Sign in";
+    });
+</script>
 </body>
 </html>
