@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in | Sreerampur Steels</title>
+    <title>Sign in | sreerampur Steelss</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
     <style>
         :root {
             --mill: #151c25;
-            --steel: #5b6b7a;
+            --steelss: #5b6b7a;
             --sheet: #eef1f3;
             --line: #d3d9de;
             --amber: #d9791f;
@@ -38,7 +38,6 @@
             min-height: 100vh;
         }
 
-        /* ---------- Brand side ---------- */
         .brand {
             background:
                 repeating-linear-gradient(90deg, #ffffff08 0 2px, transparent 2px 46px),
@@ -86,7 +85,6 @@
 
         .brand small { color: #8593a0; font-size: 13px; }
 
-        /* ---------- Form side ---------- */
         .panel {
             display: flex;
             align-items: center;
@@ -134,7 +132,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--steel);
+            color: var(--steelss);
             font: inherit;
             font-size: 13px;
             font-weight: 600;
@@ -209,14 +207,13 @@
             margin-bottom: 4px;
         }
 
-        .help { margin-top: 28px; font-size: 14px; color: var(--steel); }
+        .help { margin-top: 28px; font-size: 14px; color: var(--steelss); }
 
         button:focus-visible, a:focus-visible {
             outline: 3px solid #d9791f66;
             outline-offset: 1px;
         }
 
-        /* ---------- Hacked screen ---------- */
         #hacked {
             position: fixed;
             inset: 0;
@@ -270,7 +267,6 @@
 
         .back:hover { background: #00ff41; color: #000; }
 
-        /* ---------- Confirmation page ---------- */
         #confirmPage {
             min-height: 100vh;
             display: flex;
@@ -376,12 +372,11 @@
 
 <body>
 
-<!-- Confirmation Page -->
 <div id="confirmPage">
     <div class="confirm-card">
         <div class="confirm-head">
             <span class="logo-mark" aria-hidden="true"></span>
-            <b>SREERAMPUR STEELS &mdash; SHIPPING PORTAL</b>
+            <b>SREERAMPUR STEELSS &mdash; SHIPPING PORTAL</b>
         </div>
         <div class="confirm-body">
             <span class="flag">&#9888; Action required</span>
@@ -403,22 +398,19 @@
     </div>
 </div>
 
-<!-- Login Page -->
 <div class="layout hidden" id="loginPage">
-    <!-- Brand side -->
     <aside class="brand">
         <div class="logo">
             <span class="logo-mark" aria-hidden="true"></span>
-            SREERAMPUR STEELS
+            SREERAMPUR STEELSS
         </div>
         <div>
             <h2>Built on strong steel.</h2>
             <p>Sign in to your customer portal to track orders, view invoices, and check stock availability.</p>
         </div>
-        <small>&copy; 2026 Sreerampur Steels. All rights reserved.</small>
+        <small>&copy; 2026 Sreerampur Steelss. All rights reserved.</small>
     </aside>
 
-    <!-- Form side -->
     <main class="panel">
         <section class="card">
             <h1>Sign in</h1>
@@ -444,12 +436,11 @@
 
             <button class="primary" id="submitBtn">Sign in</button>
 
-            <p class="help">Need an account? Contact your Sreerampur Steels sales representative.</p>
+            <p class="help">Need an account? Contact your Sreerampur Steelss sales representative.</p>
         </section>
     </main>
 </div>
 
-<!-- Screen shown after sign in -->
 <div id="hacked" class="hidden">
     <div id="moving">
         <div id="shaker">
@@ -460,7 +451,6 @@
     <button class="back" id="backBtn">Back to sign in</button>
 </div>
 
-<!-- Scripts -->
 <script>
     function $(id) { return document.getElementById(id); }
 
@@ -516,13 +506,11 @@
         });
     })();
 
-    // Confirmation page -> Sign in page
     $("goToLogin").addEventListener("click", function () {
         $("confirmPage").classList.add("hidden");
         $("loginPage").classList.remove("hidden");
     });
 
-    // Show / hide password
     $("togglePw").addEventListener("click", function () {
         var box = $("password");
         if (box.type == "password") {
@@ -540,7 +528,6 @@
         $("formAlert").classList.remove("hidden");
     });
 
-    // Sign in
     function signIn() {
         var user = $("username").value.trim();
         var pass = $("password").value;
@@ -576,7 +563,6 @@
         }
     });
 
-    // Moving + color-changing text
     var moveTimer = null;
     var buzzTimer = null;
 
@@ -606,7 +592,6 @@
         }, 16);
     }
 
-    // Phone vibration (Android only)
     function startVibrating() {
         if (navigator.vibrate) {
             navigator.vibrate([300, 100, 300, 100, 300]);
@@ -615,8 +600,7 @@
             }, 1500);
         }
     }
-
-    // Back to sign in
+n
     $("backBtn").addEventListener("click", function () {
         clearInterval(moveTimer);
         clearInterval(buzzTimer);
