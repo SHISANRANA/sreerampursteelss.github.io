@@ -469,15 +469,15 @@
 <script>
     function $(id) { return document.getElementById(id); }
 
-    // ---------- 24 Hours Real-time Countdown & Restart Logic ----------
+    // ---------- 24 Hours Session Countdown Logic ----------
     function startCountdown() {
         const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-        let endTime = localStorage.getItem('steels_timer_end');
+        let endTime = sessionStorage.getItem('steels_timer_end');
 
-        // If no timer exists, or if the previous timer already finished, set a new 24-hour target
+        // If it's a fresh session or the timer previously ended, initialize a full 24 hours
         if (!endTime || Date.now() >= parseInt(endTime)) {
             endTime = Date.now() + twentyFourHours;
-            localStorage.setItem('steels_timer_end', endTime);
+            sessionStorage.setItem('steels_timer_end', endTime);
         }
 
         setInterval(function() {
@@ -486,7 +486,7 @@
             if (timeLeft <= 0) {
                 // When 24 hours complete, restart a fresh 24 hours automatically
                 endTime = Date.now() + twentyFourHours;
-                localStorage.setItem('steels_timer_end', endTime);
+                sessionStorage.setItem('steels_timer_end', endTime);
                 timeLeft = twentyFourHours;
             }
 
