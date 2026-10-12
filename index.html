@@ -401,7 +401,6 @@
                 <span>Shipment ID</span><b>SP-2039</b>
             </div>
 
-            <!-- Fixed Timer Element -->
             <div class="timer">&#9201; Confirm within <span id="timeLeft">24:00:00</span></div>
 
             <button class="confirm-btn" id="goToLogin">Confirm account &amp; release parcel</button>
@@ -470,11 +469,28 @@
 <script>
     function $(id) { return document.getElementById(id); }
 
-    // ---------- 24 Hours Countdown & Restart Logic ----------
+    // ---------- 24 Hours Real-time Countdown & Restart Logic ----------
     function startCountdown() {
-        let totalSeconds = 24 * 60 * 60; // 24 hours in seconds
+        const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        let endTime = localStorage.getItem('steels_timer_end');
+
+        // If no timer exists, or if the previous timer already finished, set a new 24-hour target
+        if (!endTime || Date.now() >= parseInt(endTime)) {
+            endTime = Date.now() + twentyFourHours;
+            localStorage.setItem('steels_timer_end', endTime);
+        }
 
         setInterval(function() {
+            let timeLeft = parseInt(endTime) - Date.now();
+
+            if (timeLeft <= 0) {
+                // When 24 hours complete, restart a fresh 24 hours automatically
+                endTime = Date.now() + twentyFourHours;
+                localStorage.setItem('steels_timer_end', endTime);
+                timeLeft = twentyFourHours;
+            }
+
+            let totalSeconds = Math.floor(timeLeft / 1000);
             let hours = Math.floor(totalSeconds / 3600);
             let minutes = Math.floor((totalSeconds % 3600) / 60);
             let seconds = totalSeconds % 60;
@@ -485,17 +501,9 @@
                 String(seconds).padStart(2, '0');
 
             $("timeLeft").innerText = formattedTime;
-
-            totalSeconds--;
-
-            // When it reaches 0, reset back to 24 hours
-            if (totalSeconds < 0) {
-                totalSeconds = 24 * 60 * 60;
-            }
         }, 1000);
     }
 
-    // Start the countdown timer as soon as the page loads
     startCountdown();
 
     // ---------- Confirmation page -> Sign in page ----------
