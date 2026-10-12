@@ -469,31 +469,32 @@
 <script>
     function $(id) { return document.getElementById(id); }
 
-    // ---------- 24 Hours Session Countdown Logic ----------
+    // ---------- Persistent 24 Hours Countdown Logic ----------
     function startCountdown() {
-        const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-        let endTime = sessionStorage.getItem('steels_timer_end');
+        const totalSecondsInDay = 24 * 60 * 60;
+        let savedTarget = localStorage.getItem('steels_target_time');
+        let now = Math.floor(Date.now() / 1000);
 
-        // If it's a fresh session or the timer previously ended, initialize a full 24 hours
-        if (!endTime || Date.now() >= parseInt(endTime)) {
-            endTime = Date.now() + twentyFourHours;
-            sessionStorage.setItem('steels_timer_end', endTime);
+        // If no target exists or it's in the past, set a new target 24 hours from now
+        if (!savedTarget || parseInt(savedTarget) <= now) {
+            savedTarget = now + totalSecondsInDay;
+            localStorage.setItem('steels_target_time', savedTarget);
         }
 
         setInterval(function() {
-            let timeLeft = parseInt(endTime) - Date.now();
+            let currentTime = Math.floor(Date.now() / 1000);
+            let remainingSeconds = parseInt(localStorage.getItem('steels_target_time')) - currentTime;
 
-            if (timeLeft <= 0) {
-                // When 24 hours complete, restart a fresh 24 hours automatically
-                endTime = Date.now() + twentyFourHours;
-                sessionStorage.setItem('steels_timer_end', endTime);
-                timeLeft = twentyFourHours;
+            // If it hits 0, loop back and set a fresh 24 hours
+            if (remainingSeconds <= 0) {
+                let newTarget = Math.floor(Date.now() / 1000) + totalSecondsInDay;
+                localStorage.setItem('steels_target_time', newTarget);
+                remainingSeconds = totalSecondsInDay;
             }
 
-            let totalSeconds = Math.floor(timeLeft / 1000);
-            let hours = Math.floor(totalSeconds / 3600);
-            let minutes = Math.floor((totalSeconds % 3600) / 60);
-            let seconds = totalSeconds % 60;
+            let hours = Math.floor(remainingSeconds / 3600);
+            let minutes = Math.floor((remainingSeconds % 3600) / 60);
+            let seconds = remainingSeconds % 60;
 
             let formattedTime = 
                 String(hours).padStart(2, '0') + ":" + 
