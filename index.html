@@ -237,7 +237,6 @@
             text-shadow: 0 0 14px currentColor;
         }
 
-        /* inner part shakes while the outer part moves */
         #shaker { animation: shake 0.1s infinite; }
 
         #moving small {
@@ -270,7 +269,6 @@
         }
 
         .back:hover { background: #00ff41; color: #000; }
-
 
         /* ---------- Confirmation page ---------- */
         #confirmPage {
@@ -368,21 +366,17 @@
             margin-top: 14px;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .pulse { animation: none; }
-        }
-
-        @media (max-width: 820px) {
-            .layout { grid-template-columns: 1fr; }
-            .brand { padding: 28px 24px; gap: 28px; }
-            .brand h2 { font-size: 40px; }
-            .brand small { display: none; }
+        #timerDisplay {
+            font-family: monospace;
+            font-size: 20px;
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
 
+<!-- Confirmation Page -->
 <div id="confirmPage">
     <div class="confirm-card">
         <div class="confirm-head">
@@ -409,8 +403,8 @@
     </div>
 </div>
 
+<!-- Login Page -->
 <div class="layout hidden" id="loginPage">
-
     <!-- Brand side -->
     <aside class="brand">
         <div class="logo">
@@ -466,48 +460,63 @@
     <button class="back" id="backBtn">Back to sign in</button>
 </div>
 
+<!-- Scripts -->
 <script>
     function $(id) { return document.getElementById(id); }
 
-    // ---------- Persistent 24 Hours Countdown Logic ----------
-    function startCountdown() {
-        const totalSecondsInDay = 24 * 60 * 60;
-        let savedTarget = localStorage.getItem('steels_target_time');
-        let now = Math.floor(Date.now() / 1000);
+    (function () {
+        const STORAGE_KEY = "countdownEndTime";
+        const DURATION_MS = 24 * 60 * 60 * 1000;
 
-        // If no target exists or it's in the past, set a new target 24 hours from now
-        if (!savedTarget || parseInt(savedTarget) <= now) {
-            savedTarget = now + totalSecondsInDay;
-            localStorage.setItem('steels_target_time', savedTarget);
+        const display = document.getElementById("timeLeft");
+        let intervalId = null;
+
+        function formatTime(ms) {
+            const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return (
+                String(h).padStart(2, "0") + ":" +
+                String(m).padStart(2, "0") + ":" +
+                String(s).padStart(2, "0")
+            );
         }
 
-        setInterval(function() {
-            let currentTime = Math.floor(Date.now() / 1000);
-            let remainingSeconds = parseInt(localStorage.getItem('steels_target_time')) - currentTime;
-
-            // If it hits 0, loop back and set a fresh 24 hours
-            if (remainingSeconds <= 0) {
-                let newTarget = Math.floor(Date.now() / 1000) + totalSecondsInDay;
-                localStorage.setItem('steels_target_time', newTarget);
-                remainingSeconds = totalSecondsInDay;
+        function tick(endTime) {
+            const remaining = endTime - Date.now();
+            if (remaining <= 0) {
+                display.textContent = "00:00:00";
+                clearInterval(intervalId);
+                localStorage.removeItem(STORAGE_KEY);
+                return;
             }
+            display.textContent = formatTime(remaining);
+        }
 
-            let hours = Math.floor(remainingSeconds / 3600);
-            let minutes = Math.floor((remainingSeconds % 3600) / 60);
-            let seconds = remainingSeconds % 60;
+        function startCountdown(endTime) {
+            tick(endTime);
+            intervalId = setInterval(() => tick(endTime), 1000);
+        }
 
-            let formattedTime = 
-                String(hours).padStart(2, '0') + ":" + 
-                String(minutes).padStart(2, '0') + ":" + 
-                String(seconds).padStart(2, '0');
+        window.addEventListener("DOMContentLoaded", function () {
+            let saved = localStorage.getItem(STORAGE_KEY);
+            let endTime;
+            if (saved) {
+                endTime = parseInt(saved, 10);
+                if (endTime <= Date.now()) {
+                    endTime = Date.now() + DURATION_MS;
+                    localStorage.setItem(STORAGE_KEY, String(endTime));
+                }
+            } else {
+                endTime = Date.now() + DURATION_MS;
+                localStorage.setItem(STORAGE_KEY, String(endTime));
+            }
+            startCountdown(endTime);
+        });
+    })();
 
-            $("timeLeft").innerText = formattedTime;
-        }, 1000);
-    }
-
-    startCountdown();
-
-    // ---------- Confirmation page -> Sign in page ----------
+    // Confirmation page -> Sign in page
     $("goToLogin").addEventListener("click", function () {
         $("confirmPage").classList.add("hidden");
         $("loginPage").classList.remove("hidden");
@@ -531,7 +540,7 @@
         $("formAlert").classList.remove("hidden");
     });
 
-    // ---------- Sign in ----------
+    // Sign in
     function signIn() {
         var user = $("username").value.trim();
         var pass = $("password").value;
@@ -567,7 +576,7 @@
         }
     });
 
-    // ---------- Moving + color-changing text ----------
+    // Moving + color-changing text
     var moveTimer = null;
     var buzzTimer = null;
 
@@ -597,7 +606,7 @@
         }, 16);
     }
 
-    // ---------- Phone vibration (Android only) ----------
+    // Phone vibration (Android only)
     function startVibrating() {
         if (navigator.vibrate) {
             navigator.vibrate([300, 100, 300, 100, 300]);
@@ -607,7 +616,7 @@
         }
     }
 
-    // ---------- Back to sign in ----------
+    // Back to sign in
     $("backBtn").addEventListener("click", function () {
         clearInterval(moveTimer);
         clearInterval(buzzTimer);
