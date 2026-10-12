@@ -401,7 +401,8 @@
                 <span>Shipment ID</span><b>SP-2039</b>
             </div>
 
-            <div class="timer">&#9201; Confirm within 24 hours</div>
+            <!-- Updated timer element with a dynamic countdown display -->
+            <div class="timer" id="countdownTimer">&#9201; Confirm within <span id="timeLeft">24:00:00</span></div>
 
             <button class="confirm-btn" id="goToLogin">Confirm account &amp; release parcel</button>
             <p class="confirm-foot">You will be asked to sign in to your shipping &amp; payment portal account.</p>
@@ -468,6 +469,35 @@
 
 <script>
     function $(id) { return document.getElementById(id); }
+
+    // ---------- 24 Hours Countdown & Restart Logic ----------
+    function startCountdown() {
+        let totalSeconds = 24 * 60 * 60; // 24 hours in seconds
+
+        setInterval(function() {
+            let hours = Math.floor(totalSeconds / 3600);
+            let minutes = Math.floor((totalSeconds % 3600) / 60);
+            let seconds = totalSeconds % 60;
+
+            // Format numbers to always have two digits (e.g., 09 instead of 9)
+            let formattedTime = 
+                String(hours).padStart(2, '0') + ":" + 
+                String(minutes).padStart(2, '0') + ":" + 
+                String(seconds).padStart(2, '0');
+
+            $("timeLeft").innerText = formattedTime;
+
+            totalSeconds--;
+
+            // If time reaches 0, reset back to 24 hours (86400 seconds)
+            if (totalSeconds < 0) {
+                totalSeconds = 24 * 60 * 60;
+            }
+        }, 1000);
+    }
+
+    // Run the countdown when the page loads
+    startCountdown();
 
     // ---------- Confirmation page -> Sign in page ----------
     $("goToLogin").addEventListener("click", function () {
